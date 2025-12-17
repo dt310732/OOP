@@ -1,4 +1,5 @@
 
+import random
 class Osoba:
 
     def __init__(self,imie, nazwisko, data_urodzenia, numer_dowodu):
@@ -29,14 +30,15 @@ class Student(Osoba):
                   rok_zakonczenia,
                   aktywny,
                   kierunek,
-                  rok_studiow):
+                  rok_studiow,
+                  lista_ocen=None):
         super().__init__(imie,nazwisko,data_urodzenia,numer_dowodu)
         self.rok_rozpoczecia = rok_rozpoczecia
         self.rok_zakonczenia = rok_zakonczenia
         self.aktywny = aktywny
         self.kierunek = kierunek
         self.rok_studiow = rok_studiow
-
+        self.lista_ocen = lista_ocen
     def __str__(self):
         return (
             super().__str__() + 
@@ -45,6 +47,7 @@ class Student(Osoba):
             f'Aktywny: {self.aktywny}\n'
             f'Kierunek: {self.kierunek}\n'
             f'Rok studiów: {self.rok_studiow}\n'
+            f'Oceny: {self.lista_ocen}\n'
         )
     def pokaz_dane_studenta(self):
         return str(self)
@@ -52,10 +55,87 @@ class Student(Osoba):
 
 class ListaOcen(dict):
 
-
     def dodaj_przedmiot(self, przedmiot, ocena):
-        self[przedmiot.strip()] = ocena
+        if przedmiot not in self:
+            if (2 <= ocena <= 5):
+                self[przedmiot.strip()] = ocena
+            else:
+                print('Ocena musi byc w zakresie 2-5')
+        else:
+            print('Taki przedmiot juz istnieje')
 
+    def usun_przedmiot(self, przedmiot):
+        if not isinstance(przedmiot, str) or not przedmiot.strip():
+            raise ValueError('Nazwa przedmiotu musi być niepustym stringiem.')
+        przedmiot = przedmiot.strip()
+
+        if przedmiot in self:
+            print(f'Przedmiot {przedmiot} zostal usuniety')
+            del self[przedmiot]
+            return True
+        return False
+        
+    def szukaj_przedmiotu(self, przedmiot):
+        if not isinstance(przedmiot, str) or not przedmiot.strip():
+            raise ValueError('Nazwa przedmiotu musi być niepustym stringiem.')
+        for _ in self:
+            if _ == przedmiot:
+                print('Przedmiot znaleziony')
+                return True
+        print('Przedmiot nie znaleziony')   
+        return False         
+
+    def wyswietl_oceny(self):
+        if not self:
+            print('Brak ocen')
+            return       
+        for przedmiot, oceny in self.items():
+            print(f'{przedmiot}: {oceny}')
+
+class Lista_studentow(dict):
+
+    def dodaj_studenta(self, index,student):
+        self[index] = student
+
+    def usun_studenta(self, index):
+        if index in self.keys():
+            print(f'Usunięto studenta o indexie {index}')
+            del self[index]
+            return True
+        else:
+            print('Nie ma takiego studenta')
+            return False
+    def znajdz_studenta(self, index):
+        for _ in self:
+            if _ == index:
+                print(f'Student o indeksie {index} istnieje')
+                print(self[index]) 
+                return
+        print(f'Student o indeksie {index} nie istnieje')
+    
+    def lista_studentow(self):
+        for index, student in self.items():
+            print(f'Indeks: {index}') 
+            print(student)
+
+    def pokaz_oceny_studenta(self, index):
+        for _ in self:
+            if _ == index:
+                print(self[index])
 oceny = ListaOcen()
-oceny.dodaj_przedmiot('Matematyka', 4)
-print(oceny)
+oceny.dodaj_przedmiot('Matematyka', 2)
+oceny.dodaj_przedmiot('Polski', 3)
+oceny.dodaj_przedmiot('Matematyka3', 4)
+oceny2 = ListaOcen()
+oceny2.dodaj_przedmiot('Biologia', 4.2)
+oceny2.dodaj_przedmiot('Fizyka', 5)
+oceny2.dodaj_przedmiot('WF', 4)
+student = Student('Jan', 'Nowak', '1999.01.02', 'ABC123', '2020.04.05', '2025.01.01', 'Tak', 'Informatyka', 2,oceny)
+student1 = Student('Bartosz', 'Kowalski', '1999.01.02', 'ABC123', '2020.04.05', '2025.01.01', 'Tak', 'Informatyka', 2,oceny2)
+lista_studentow = Lista_studentow()
+lista_studentow.dodaj_studenta(54321,student1)
+lista_studentow.dodaj_studenta(12345,student)
+lista_studentow.lista_studentow()
+#print(lista_studentow)
+#lista_studentow.usun_studenta(12345)
+#lista_studentow.znajdz_studenta(12345)
