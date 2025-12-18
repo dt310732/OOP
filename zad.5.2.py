@@ -1,17 +1,15 @@
-
-import random
 class Osoba:
 
     def __init__(self,imie, nazwisko, data_urodzenia, numer_dowodu):
         self.imie = imie
-        self.naziwsko = nazwisko 
+        self.nazwisko = nazwisko 
         self.data_urodzenia = data_urodzenia
         self.numer_dowodu = numer_dowodu
 
     def __str__(self):
         return (
             f'Imie: {self.imie}\n'
-            f'Nazwisko: {self.naziwsko}\n'
+            f'Nazwisko: {self.nazwisko}\n'
             f'Data urodzenia: {self.data_urodzenia}\n'
             f'Numer dowodu: {self.numer_dowodu}\n'
         )
@@ -38,7 +36,10 @@ class Student(Osoba):
         self.aktywny = aktywny
         self.kierunek = kierunek
         self.rok_studiow = rok_studiow
-        self.lista_ocen = lista_ocen
+        if lista_ocen is None:
+            self.lista_ocen = 'Brak Ocen'
+        else:
+            self.lista_ocen = lista_ocen
     def __str__(self):
         return (
             super().__str__() + 
@@ -89,6 +90,8 @@ class ListaOcen(dict):
         if not self:
             print('Brak ocen')
             return       
+        print('Oceny')
+        print('--------')
         for przedmiot, oceny in self.items():
             print(f'{przedmiot}: {oceny}')
 
@@ -119,23 +122,19 @@ class Lista_studentow(dict):
             print(student)
 
     def pokaz_oceny_studenta(self, index):
-        for _ in self:
-            if _ == index:
-                print(self[index])
+            student = self[index]
+            print(f"Oceny studenta {student.imie} {student.nazwisko}:")
+            for przedmiot, ocena in student.lista_ocen.items():
+                print(f"{przedmiot}: {ocena}")
 oceny = ListaOcen()
-oceny.dodaj_przedmiot('Matematyka', 2)
-oceny.dodaj_przedmiot('Polski', 3)
-oceny.dodaj_przedmiot('Matematyka3', 4)
-oceny2 = ListaOcen()
-oceny2.dodaj_przedmiot('Biologia', 4.2)
-oceny2.dodaj_przedmiot('Fizyka', 5)
-oceny2.dodaj_przedmiot('WF', 4)
-student = Student('Jan', 'Nowak', '1999.01.02', 'ABC123', '2020.04.05', '2025.01.01', 'Tak', 'Informatyka', 2,oceny)
-student1 = Student('Bartosz', 'Kowalski', '1999.01.02', 'ABC123', '2020.04.05', '2025.01.01', 'Tak', 'Informatyka', 2,oceny2)
+oceny.dodaj_przedmiot('Matematyka', 5)
+oceny.dodaj_przedmiot('Polski', 3.5)
+osoba = Osoba('Jan', 'Nowak', '1999-01-01', 'ABC123')
+student = Student('Jan', 'Nowak', '1999-01-01', 'ABC123', '2020-01-01', '2025-01-01', 'Tak', 'Informatyka', 2, oceny)
 lista_studentow = Lista_studentow()
-lista_studentow.dodaj_studenta(54321,student1)
-lista_studentow.dodaj_studenta(12345,student)
+lista_studentow.dodaj_studenta(12345, student)
+print(osoba.pokaz_dane_osoby())
+print(student.pokaz_dane_studenta())
+lista_studentow.pokaz_oceny_studenta(12345)
+oceny.wyswietl_oceny()
 lista_studentow.lista_studentow()
-#print(lista_studentow)
-#lista_studentow.usun_studenta(12345)
-#lista_studentow.znajdz_studenta(12345)
